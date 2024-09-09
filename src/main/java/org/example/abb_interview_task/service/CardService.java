@@ -56,7 +56,7 @@ public class CardService {
 
     }
 
-
+    @org.springframework.transaction.annotation.Transactional
     public List<CardResponseDto> getCards(UserDetails userDetails) {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
                 () -> new NotFoundException("User not found")
@@ -69,7 +69,7 @@ public class CardService {
                 .toList();
     }
 
-
+    @org.springframework.transaction.annotation.Transactional
     public CardResponseDto getCardById(UserDetails userDetails, long cardId) {
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
                 () -> new NotFoundException("User not found")
@@ -114,7 +114,7 @@ public class CardService {
         }
 
 
-        Optional<Cards> cardsByCardNumber = cardsRepository.findCardsByCardNumber(cardNumber);
+        Optional<Cards> cardsByCardNumber = cardsRepository.findCardByNumberWithLock(cardNumber);
         if (cardsByCardNumber.isPresent()) {
             Cards card = cardsByCardNumber.get();
             if (card.getUser() == null || !card.isActive()) {
@@ -134,7 +134,7 @@ public class CardService {
 
     @Transactional
     public String useCard(String cardNumber) {
-        Cards cards = cardsRepository.findCardsByCardNumber(cardNumber)
+        Cards cards = cardsRepository.findCardByNumberWithLock(cardNumber)
                 .orElseThrow(
                         () -> new NotFoundException("Card not found")
                 );

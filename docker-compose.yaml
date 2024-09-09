@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  api_service:
+    build: .
+    ports:
+      - "8088:8088"
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/abb
+      SPRING_DATASOURCE_USERNAME: postgresql
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - springpostgres-net
   postgres_db:
     image: postgres:latest
     ports:

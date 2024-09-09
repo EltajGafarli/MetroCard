@@ -1,7 +1,9 @@
 package org.example.abb_interview_task.repository;
 
+import jakarta.persistence.LockModeType;
 import org.example.abb_interview_task.entity.Cards;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +21,12 @@ public interface CardsRepository extends JpaRepository<Cards, Long> {
     List<Cards> findCardsByUserId(@Param("userId") long userId);
 
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query(value = "SELECT c from Cards c where c.cardNumber = :cardNumber")
+    Optional<Cards> findCardByNumberWithLock(@Param("cardNumber") String cardNumber);
+
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(
             value = "SELECT c from Cards c where c.user.uId = :userId and c.cId = :cardId and c.isActive=true"
     )

@@ -3,7 +3,6 @@ package org.example.abb_interview_task.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.data.jpa.repository.Lock;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
