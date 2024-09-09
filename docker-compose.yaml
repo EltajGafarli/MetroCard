@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  postgres_db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgresql
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: abb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgresql -d abb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  postgres_data:
+    driver: local
